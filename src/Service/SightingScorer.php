@@ -18,6 +18,7 @@ class SightingScorer
 
     public function score(BigFootSighting $sighting): BigFootSightingScore
     {
+
         $score = 0;
         foreach ($this->scoringFactors as $scoringFactor) {
             $score += $scoringFactor->score($sighting);

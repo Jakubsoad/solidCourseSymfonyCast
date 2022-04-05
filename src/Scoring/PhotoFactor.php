@@ -4,19 +4,17 @@ namespace App\Scoring;
 
 use App\Entity\BigFootSighting;
 
-class TitleFactor implements ScoringFactorInterface
+class PhotoFactor implements ScoringFactorInterface
 {
     public function score(BigFootSighting $sighting): int
     {
-        $score = 0;
-        $title = strtolower($sighting->getTitle());
-
-        if (stripos($title, 'hairy') !== false) {
-            $score += 10;
+        if (count($sighting->getImages()) === 0) {
+            return 0;
         }
 
-        if (stripos($title, 'chased me') !== false) {
-            $score += 20;
+        $score = 0;
+        foreach ($sighting->getImages() as $image) {
+            $score += rand(1, 100);
         }
 
         return $score;
