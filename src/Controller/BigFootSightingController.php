@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\BigFootSighting;
 use App\Form\BigfootSightingType;
+use App\Model\DebuggableBigFootScorer;
 use App\Service\SightingScorer;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -34,6 +35,13 @@ class BigFootSightingController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'New BigFoot Sighting created successfully!');
+
+            if ($bfsScore instanceof DebuggableBigFootScorer) {
+                $this->addFlash('success',sprintf(
+                    'The scoring took %s milliseconds',
+                    $bfsScore->getCalculationTime() * 1000
+                ));
+            }
 
             return $this->redirectToRoute('app_sighting_show', [
                 'id' => $sighting->getId()
