@@ -10,10 +10,12 @@ class SightingScorer
 {
     /** @var ScoringFactorInterface[] */
     private iterable $scoringFactors;
+    private iterable $scoringAdjusters;
 
-    public function __construct(iterable $scoringFactors)
+    public function __construct(iterable $scoringFactors, iterable $scoringAdjusters)
     {
         $this->scoringFactors = $scoringFactors;
+        $this->scoringAdjusters = $scoringAdjusters;
     }
 
     public function score(BigFootSighting $sighting): BigFootSightingScore
@@ -22,6 +24,10 @@ class SightingScorer
         $score = 0;
         foreach ($this->scoringFactors as $scoringFactor) {
             $score += $scoringFactor->score($sighting);
+        }
+
+        foreach ($this->scoringAdjusters as $scoringAdjuster) {
+            $score += $scoringAdjuster->adjustScore($score, $sighting);
         }
 
         return new BigFootSightingScore($score);
